@@ -2,54 +2,20 @@ const path = require('path');
 
 const csvParser = (req, res, next) => {
 
-  let parsedJSON;
-
   if (req.body.data) {
-    parsedJSON = JSON.parse(req.body.data);
-    console.log('parsed req.body.data = ', parsedJSON);
-    console.log('parsed req.body.data.children[0].children = ', parsedJSON.children[0].children);
-    console.log('typeof parsed req.body.data = ', typeof parsedJSON);
+    let csv, table, html, parsedJSON;
 
-    let csv = createColsName(parsedJSON);
+    parsedJSON = JSON.parse(req.body.data);
+
+    csv = createColsName(parsedJSON);
     csv = populateData(parsedJSON, csv);
 
-    // res.attachment(path.join(__dirname, 'test.txt'));
-    // res.sendFile(path.join(__dirname, 'test.csv'));
-    console.log(csv);
-
-    let table = csv.split('\n');
-    let colHeaders = table[0].split(',');
-
-    let html = renderHeaders(colHeaders);
-    // html = renderCsvData(table, html);
-
-    console.log('table = ', table);
-    // console.log('html = ', html);
-
-
+    table = csv.split('\n');
+    html = renderHeadersRow(table);
+    html = renderCsvData(table, html);
 
     res.send(html);
-
   }
-
-};
-
-var renderCsvData = (data, html) => {
-
-  html = data.reduce((html, value) => {
-
-  }, html);
-};
-
-var renderHeaders = (headers) => {
-  let html = `<table><tr>`;
-
-  html = headers.reduce((html, header) => {
-    return html += `<th scope="col">${header}</th>`
-  }, html);
-
-  html += `</tr></table>`
-  return html;
 };
 
 var createColsName = (data) => {
@@ -61,7 +27,6 @@ var createColsName = (data) => {
 };
 
 var populateData = (data, csv) => {
-
   for (let key in data) {
     let value = data[key];
 
@@ -73,12 +38,42 @@ var populateData = (data, csv) => {
       for (let obj of value) { csv = populateData(obj, csv); }
     }
   }
-
   return csv;
 };
 
+var renderHeadersRow = (table) => {
+  let html = `<table><tr>`;
+  let headers = table[0].split(',');
+
+  html = headers.reduce((html, header) => {
+    return html += `<th scope="col">${header}</th>`;
+  }, html);
+
+  html += `</tr>`;
+  return html;
+};
+
+
+var renderCsvData = (rows, html) => {
+  rows.forEach((row, index) => {
+    if (hasData(row, index)) {
+      html += `<tr>`;
+
+      html = row.split(',').reduce((html, value) => {
+        return html += `<td>${value}</td>`;
+      }, html);
+
+      html += `</tr>`;
+    }
+  });
+  html += `</table>`;
+  return html
+};
+
+
 var isIterable = (value) => Array.isArray(value) && value.length > 0;
 var isPrimitive = (value) => typeof value !== 'object';
+var hasData = (row, index) => index > 0 && row !== '';
 
 module.exports = {
   csvParser : csvParser
