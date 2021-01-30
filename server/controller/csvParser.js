@@ -1,11 +1,19 @@
 const path = require('path');
+const { readFile } = require('./fileReader');
 
 const csvParser = (req, res, next) => {
 
-  if (req.body.data) {
-    let csv, table, html, parsedJSON;
+  let filename = req.file ? req.file.filename : undefined;
 
-    parsedJSON = JSON.parse(req.body.data);
+  readFile(filename, (err, fileData) => {
+    if (err) {
+      console.log('err = ', err);
+      res.sendStatus(400);
+      return err;
+    }
+
+    let csv, table, html, parsedJSON;
+    parsedJSON = JSON.parse(fileData.toString());
 
     csv = createColsName(parsedJSON);
     csv = populateData(parsedJSON, csv);
@@ -15,7 +23,8 @@ const csvParser = (req, res, next) => {
     html = renderCsvData(table, html);
 
     res.send(html);
-  }
+  });
+
 };
 
 var createColsName = (data) => {
@@ -76,9 +85,9 @@ var isIterable = (value) => Array.isArray(value) && value.length > 0;
 var isPrimitive = (value) => typeof value !== 'object';
 var hasData = (row, index) => index > 0 && row !== '';
 
-var form = `<form action="http://localhost:3000/csv" method="post" id="json">
+var form = `<form action="http://localhost:3000/csv" method="post" id="json" enctype="multipart/form-data">
 <label for="json">Enter JSON:</label>
-<textarea id="json" name="data"></textarea>
+<input type="file" id="json" name="json">
 <input type="submit" value="Submit JSON">
 </form>`
 

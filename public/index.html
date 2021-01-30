@@ -8,9 +8,12 @@
   <body>
     <div id="container">
       <h1>Hello</h1>
-      <form action="http://localhost:3000/csv" method="post" id="json">
+      <form action="http://localhost:3000/csv" method="post" id="json" enctype="multipart/form-data">
         <label for="json">Enter JSON:</label>
-        <textarea id="json" name="data"></textarea>
+
+        <!-- <textarea id="json" name="data"></textarea> -->
+        <input type="file" id="json" name="json">
+
         <input type="submit" value="Submit JSON">
       </form>
 
