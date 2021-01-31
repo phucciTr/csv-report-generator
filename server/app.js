@@ -12,9 +12,9 @@ const cors = require('cors');
 app.use(cors());
 app.use('/', express.static(path.join(__dirname, './..public')));
 
-app.get('/', (req, res) => {
-  res.send('hello csv');
-});
+// app.get('/', (req, res) => {
+//   res.send('hello csv');
+// });
 
 app.post('/csv', upload.single('jsonForm'), csvParser);
 

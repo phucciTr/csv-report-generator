@@ -86,9 +86,9 @@ var isIterable = (value) => Array.isArray(value) && value.length > 0;
 var isPrimitive = (value) => typeof value !== 'object';
 var hasData = (row, index) => index > 0 && row !== '';
 
-var form = `<form action="http://localhost:3000/csv" method="post" id="json" enctype="multipart/form-data">
-<label for="json">Enter JSON:</label>
-<input type="file" id="json" name="json">
+var form = `<form id="uploadForm" enctype="multipart/form-data">
+<label for="jsonForm">Enter JSON:</label>
+<input type="file" id="jsonForm" name="jsonForm">
 <input type="submit" value="Submit JSON">
 </form>`
 
