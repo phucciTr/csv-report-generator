@@ -53,8 +53,7 @@ var populateData = (data, csv) => {
 
 var renderHeadersRow = (table) => {
   let headers = table[0].split(',');
-  let html = form;
-  html += `<table><tr>`;
+  let html = `<table><tr>`;
 
   html = headers.reduce((html, header) => {
     return html += `<th scope="col">${header}</th>`;
@@ -86,11 +85,6 @@ var isIterable = (value) => Array.isArray(value) && value.length > 0;
 var isPrimitive = (value) => typeof value !== 'object';
 var hasData = (row, index) => index > 0 && row !== '';
 
-var form = `<form id="uploadForm" enctype="multipart/form-data">
-<label for="jsonForm">Enter JSON:</label>
-<input type="file" id="jsonForm" name="jsonForm">
-<input type="submit" value="Submit JSON">
-</form>`
 
 module.exports = {
   csvParser : csvParser
