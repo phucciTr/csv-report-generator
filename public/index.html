@@ -2,18 +2,18 @@
   <head>
     <title>CSV Report Generator</title>
     <link rel="stylesheet" href="style.css">
+    <script src="jquery.js"></script>
     </title>
   </head>
 
   <body>
     <div id="container">
       <h1>Hello</h1>
-      <form action="http://localhost:3000/csv" method="post" id="json" enctype="multipart/form-data">
-        <label for="json">Enter JSON:</label>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <label for="jsonForm">Enter JSON:</label>
 
         <!-- <textarea id="json" name="data"></textarea> -->
-        <input type="file" id="json" name="json">
-
+        <input type="file" id="jsonForm" name="jsonForm">
         <input type="submit" value="Submit JSON">
       </form>
 

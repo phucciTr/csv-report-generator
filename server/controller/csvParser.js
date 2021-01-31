@@ -4,6 +4,7 @@ const { readFile } = require('./fileReader');
 const csvParser = (req, res, next) => {
 
   let filename = req.file ? req.file.filename : undefined;
+  console.log('filename = ', filename);
 
   readFile(filename, (err, fileData) => {
     if (err) {
