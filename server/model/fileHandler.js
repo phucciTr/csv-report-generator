@@ -1,20 +1,15 @@
 const path = require('path');
 const fs = require('fs');
 
-let id = -1;
-
 const FileHandler = {
-  readFile: (name, upload, callback) => {
-    let uploadPath = `./../db/uploads/${name}`;
-    let csvPath = `./../db/csv/${name}`;
+  readFile: (name, callback) => {
+    let filepath = path.join(__dirname, `./../db/uploads/${name}`);
 
-    let filename = upload ? path.join(__dirname, uploadPath) : path.join(__dirname + csvPath);
-
-    fs.readFile(filename, (err, fileData) => {
+    fs.readFile(filepath, (err, fileData) => {
       if (err) {
         callback(err, null);
       } else {
-        callback(null, fileData);
+        callback(null, fileData, filepath);
       }
     });
   },
@@ -39,7 +34,7 @@ const FileHandler = {
         if (err) {
           callback(err, null);
         } else {
-          callback(null, `${filepath} removed`);
+          callback();
         }
       })
     }
@@ -62,5 +57,4 @@ var getUniqId = (cb) => {
 
 module.exports = {
   FileHandler : FileHandler,
-  getUniqId : getUniqId
 };

@@ -1,12 +1,11 @@
 const path = require('path');
-const { FileHandler, getUniqId } = require('./../model/fileHandler');
+const { FileHandler } = require('./../model/fileHandler');
 
-const csvParser = (req, res, next) => {
-
+const csvConverter = (req, res, next) => {
   let csvText, table, html, parsedJSON;
   let filename = req.file ? req.file.filename : undefined;
 
-  FileHandler.readFile(filename, true, (err, fileData) => {
+  FileHandler.readFile(filename, (err, fileData, filePath) => {
     if (err) {
       console.log('err = ', err);
       res.sendStatus(400);
@@ -17,13 +16,15 @@ const csvParser = (req, res, next) => {
     csvText = createCsvText(parsedJSON);
 
     FileHandler.writeFile(csvText, (err, id) => {
-      table = csvText.split('\n');
-      html = renderHeadersRow(table);
-      html = renderCsvData(table, html);
+      FileHandler.deleteFile(filePath, () => {
 
-      res.send([html, id]);
+        table = csvText.split('\n');
+        html = renderHeadersRow(table);
+        html = renderCsvData(table, html);
+
+        res.send([html, id]);
+      });
     });
-
   });
 
 };
@@ -92,5 +93,5 @@ var hasData = (row, index) => index > 0 && row !== '';
 
 
 module.exports = {
-  csvParser : csvParser
+  csvConverter : csvConverter
 };

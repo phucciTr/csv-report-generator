@@ -1,14 +1,10 @@
 
 
 $(document).ready(function() {
-
-  console.log('hello');
-
   let csv = $('#csv');
 
   $('#uploadForm').on('submit', function(e) {
     let data = new FormData($('#uploadForm')[0]);
-    console.log('data = ', $('#uploadForm'));
     e.preventDefault();
 
     $.ajax({
