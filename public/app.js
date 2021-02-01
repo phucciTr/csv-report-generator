@@ -6,8 +6,9 @@ $(document).ready(function() {
 
   let csv = $('#csv');
 
-  $('form').on('submit', function(e){
+  $('#uploadForm').on('submit', function(e) {
     let data = new FormData($('#uploadForm')[0]);
+    console.log('data = ', $('#uploadForm'));
     e.preventDefault();
 
     $.ajax({
@@ -17,9 +18,10 @@ $(document).ready(function() {
       processData: false,
       cache: false,
       data: data,
-      success: function(res){
+      success: function([html, id]){
         csv.html('');
-        csv.html(res);
+        csv.html(html);
+        $('#download').attr('action', `http://localhost:3000/download/${id}`);
       },
     });
   });

@@ -1,31 +1,36 @@
 const path = require('path');
-const { readFile } = require('./fileReader');
+const { FileHandler, getUniqId } = require('./../model/fileHandler');
 
 const csvParser = (req, res, next) => {
 
+  let csvText, table, html, parsedJSON;
   let filename = req.file ? req.file.filename : undefined;
-  console.log('filename = ', filename);
 
-  readFile(filename, (err, fileData) => {
+  FileHandler.readFile(filename, true, (err, fileData) => {
     if (err) {
       console.log('err = ', err);
       res.sendStatus(400);
       return err;
     }
 
-    let csv, table, html, parsedJSON;
     parsedJSON = JSON.parse(fileData.toString());
+    csvText = createCsvText(parsedJSON);
 
-    csv = createColsName(parsedJSON);
-    csv = populateData(parsedJSON, csv);
+    FileHandler.writeFile(csvText, (err, id) => {
+      table = csvText.split('\n');
+      html = renderHeadersRow(table);
+      html = renderCsvData(table, html);
 
-    table = csv.split('\n');
-    html = renderHeadersRow(table);
-    html = renderCsvData(table, html);
+      res.send([html, id]);
+    });
 
-    res.send(html);
   });
 
+};
+
+var createCsvText = (data) => {
+  let csv = createColsName(data);
+  return csv = populateData(data, csv);
 };
 
 var createColsName = (data) => {
