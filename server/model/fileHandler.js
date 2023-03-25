@@ -48,7 +48,7 @@ var getUniqId = (cb) => {
     if (err) {
       console.log('err');
     } else {
-      fs.writeFile(counterPath, Number(count) + 1, (err, newCount) => {
+      fs.writeFile(counterPath, (Number(count) + 1).toString(), (err, newCount) => {
         cb(Number(count) + 1);
       });
     }
